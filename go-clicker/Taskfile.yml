@@ -1,0 +1,14 @@
+version: '3'
+
+tasks:
+  install:tools:
+    desc: Install tools for development
+    env:
+      GOBIN: "{{.TASKFILE_DIR}}/tools"
+    cmds:
+      - go install github.com/cosmtrek/air@v1.51.0
+
+  dev:
+    desc: Run development server
+    cmds:
+      - tools/air -c configs/air.toml
