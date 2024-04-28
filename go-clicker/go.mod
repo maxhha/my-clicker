@@ -10,6 +10,7 @@ require (
 	github.com/klauspost/compress v1.17.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.52.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect

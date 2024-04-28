@@ -21,7 +21,7 @@ func NewServer(configuration configuration.Configuartion) Server {
 		// DisableKeepalive: true,
 	})
 
-	linkStorage := storages.NewRedisLinkStorage()
+	linkStorage := storages.NewInMemoryLinkStorage()
 
 	linkInteractor := interactors.NewLinkInteractor(&linkStorage)
 
@@ -32,6 +32,8 @@ func NewServer(configuration configuration.Configuartion) Server {
 	}
 
 	app.Post("/api/link/create", server.HandleLinkCreate)
+	app.Get("/api/link/:link/counter", server.HandleLinkGetCounter)
+	app.Get("/l/:link", server.HandleLinkRedirect)
 
 	return server
 }

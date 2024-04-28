@@ -11,7 +11,7 @@ func NewRedisLinkStorage() RedisLinkStorage {
 
 // Create implements ports.LinkStorage.
 func (s *RedisLinkStorage) Create(redirect string) (string, error) {
-	return "MOCKED", nil
+	panic("unimplemented")
 }
 
 // GetCounter implements ports.LinkStorage.
