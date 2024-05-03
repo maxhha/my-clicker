@@ -12,3 +12,26 @@ tasks:
     desc: Run development server
     cmds:
       - tools/air -c configs/air.toml
+
+  build:
+    desc: Run docker compose build go-clicker server
+    cmds:
+      - docker compose build server
+    sources:
+      - Dockerfile
+      - go.mod
+      - go.sum
+      - cmd/**/*.go
+      - internal/**/*.go
+
+  start:
+    desc: Starts server
+    deps:
+      - task: build
+    cmds:
+      - docker compose up -d
+
+  stop:
+    desc: Stop server
+    cmds:
+      - docker compose stop

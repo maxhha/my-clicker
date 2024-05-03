@@ -2,6 +2,7 @@ package storages
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/maxhha/my-clicker/internal/interactors/ports"
 	"github.com/teris-io/shortid"
@@ -9,14 +10,18 @@ import (
 
 // Not thread safe
 type InMemoryLinkStorage struct {
-	links    map[string]string
-	counters map[string]uint64
+	links_mu    sync.RWMutex
+	links       map[string]string
+	counters_mu sync.Mutex
+	counters    map[string]uint64
 }
 
 func NewInMemoryLinkStorage() InMemoryLinkStorage {
 	return InMemoryLinkStorage{
-		links:    make(map[string]string),
-		counters: make(map[string]uint64),
+		links_mu:    sync.RWMutex{},
+		links:       make(map[string]string),
+		counters_mu: sync.Mutex{},
+		counters:    make(map[string]uint64),
 	}
 }
 
@@ -27,7 +32,11 @@ func (s *InMemoryLinkStorage) Create(redirect string) (string, error) {
 		return "", fmt.Errorf("shortid generate: %w", err)
 	}
 
+	s.links_mu.Lock()
+	defer s.links_mu.Unlock()
 	s.links[id] = redirect
+	s.counters_mu.Lock()
+	defer s.counters_mu.Unlock()
 	s.counters[id] = 0
 
 	return id, nil
@@ -35,6 +44,8 @@ func (s *InMemoryLinkStorage) Create(redirect string) (string, error) {
 
 // GetCounter implements ports.LinkStorage.
 func (s *InMemoryLinkStorage) GetCounter(link string) (uint64, error) {
+	s.counters_mu.Lock()
+	defer s.counters_mu.Unlock()
 	counter, ok := s.counters[link]
 	if ok {
 		return counter, nil
@@ -45,6 +56,8 @@ func (s *InMemoryLinkStorage) GetCounter(link string) (uint64, error) {
 
 // GetRedirect implements ports.LinkStorage.
 func (s *InMemoryLinkStorage) GetRedirect(link string) (string, error) {
+	s.links_mu.RLock()
+	defer s.links_mu.RUnlock()
 	redirect, ok := s.links[link]
 	if ok {
 		return redirect, nil
@@ -55,6 +68,8 @@ func (s *InMemoryLinkStorage) GetRedirect(link string) (string, error) {
 
 // IncrementCounter implements ports.LinkStorage.
 func (s *InMemoryLinkStorage) IncrementCounter(link string) error {
+	s.counters_mu.Lock()
+	defer s.counters_mu.Unlock()
 	counter, ok := s.counters[link]
 	if ok {
 		s.counters[link] = counter + 1

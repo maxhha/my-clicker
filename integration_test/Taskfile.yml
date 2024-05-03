@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  default: task --list-all
+  run:
+    desc: Run all tests
+    env:
+      CLICKER_URL: http://localhost:3000
+    cmds:
+      - ./env/bin/pytest

@@ -1,0 +1,20 @@
+version: "3"
+
+includes:
+  integration_test:
+    taskfile: integration_test/Taskfile.yml
+    dir: integration_test
+  go-clicker:
+    taskfile: go-clicker/Taskfile.yml
+    dir: go-clicker
+    aliases: ["g"]
+
+tasks:
+  default: task --list-all
+  go-clicker:test:intergration:
+    aliases: ["g:test:i"]
+    desc: Run integration_test for go-clicker
+    cmds:
+      - task: go-clicker:start
+      - defer: { task: go-clicker:stop }
+      - task: integration_test:run
