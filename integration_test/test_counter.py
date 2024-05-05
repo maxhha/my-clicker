@@ -8,7 +8,7 @@ def base_url():
     return os.environ['CLICKER_URL']
 
 def test_single_thread_clicking(base_url):
-    N = 1000
+    N = 2000
     resp = requests.post(f"{base_url}/api/link/create", json={"redirect": "http://localhost/some/sample"})
     assert resp.status_code == 200
     resp_data = resp.json()
@@ -25,7 +25,7 @@ def test_single_thread_clicking(base_url):
 
 
 def test_multithread_clicking(base_url):
-    N = 1000
+    N = 2000
     WORKERS = 4
     resp = requests.post(f"{base_url}/api/link/create", json={"redirect": "http://localhost/some/sample"})
     assert resp.status_code == 200
