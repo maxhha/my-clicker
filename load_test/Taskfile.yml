@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  default: task --list-all
+  run:breakpoint_test:
+    desc: Run all load tests
+    vars:
+      CLICKER_URL: http://host.docker.internal:3000
+    cmds:
+      - docker compose run k6 run -e CLICKER_URL={{.CLICKER_URL}} breakpoint_test.js
